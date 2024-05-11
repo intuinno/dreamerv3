@@ -4,9 +4,10 @@ from functools import partial as bind
 
 import embodied
 import numpy as np
+import jax.numpy as jnp
+from jaxhpm.jax_loader import jaxMMNIST
 
-
-def train_hpm(make_agent, make_logger, args):
+def train_hpm(make_agent, make_logger, args, config):
 
   agent = make_agent()
   logger = make_logger()
@@ -30,9 +31,19 @@ def train_hpm(make_agent, make_logger, args):
   should_save = embodied.when.Clock(args.save_every)
 
   dataset_train = iter(agent.dataset(bind(
-      replay.dataset, args.batch_size, args.batch_length)))
+    jaxMMNIST, 
+    train=True, 
+    seq_len=args.batch_length,
+    batch_size=args.batch_size,
+    num_source_mnist_images=config.num_mnist_patch, 
+  )))
   dataset_report = iter(agent.dataset(bind(
-      replay.dataset, args.batch_size, args.batch_length_eval)))
+    jaxMMNIST, 
+    train=False, 
+    seq_len=args.batch_length,
+    batch_size=args.batch_size,
+    num_source_mnist_images=config.num_mnist_patch, 
+  )))
   carry = [agent.init_train(args.batch_size)]
   carry_report = agent.init_report(args.batch_size)
 
@@ -47,28 +58,28 @@ def train_hpm(make_agent, make_logger, args):
       if 'replay' in outs:
         replay.update(outs['replay'])
       agg.add(mets, prefix='train')
-  driver.on_step(train_step)
 
   checkpoint = embodied.Checkpoint(logdir / 'checkpoint.ckpt')
   checkpoint.step = step
   checkpoint.agent = agent
-  checkpoint.replay = replay
   if args.from_checkpoint:
     checkpoint.load(args.from_checkpoint)
   checkpoint.load_or_save()
   should_save(step)  # Register that we just saved.
 
+
   print('Start training loop')
-  policy = lambda *args: agent.policy(
-      *args, mode='explore' if should_expl(step) else 'train')
-  driver.reset(agent.init_policy)
   while step < args.steps:
 
     step.increment()
-    
-    driver(policy, steps=10)
 
-    if should_eval(step) and len(replay):
+    with embodied.timer.section('dataset_next'):
+      batch = next(dataset_train)
+
+      outs, carry[0], mets = agent.train(batch, carry[0])
+      
+    
+    if should_eval(step):
       mets, _ = agent.report(next(dataset_report), carry_report)
       logger.add(mets, prefix='report')
 
@@ -76,9 +87,7 @@ def train_hpm(make_agent, make_logger, args):
       logger.add(agg.result())
       logger.add(epstats.result(), prefix='epstats')
       logger.add(embodied.timer.stats(), prefix='timer')
-      logger.add(replay.stats(), prefix='replay')
       logger.add(usage.stats(), prefix='usage')
-      logger.add({'fps/policy': policy_fps.result()})
       logger.add({'fps/train': train_fps.result()})
       logger.write()
 

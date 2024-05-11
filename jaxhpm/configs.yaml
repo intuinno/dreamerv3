@@ -7,6 +7,7 @@ defaults:
   eval_dir: ''
   filter: 'score|length|fps|ratio|train/.*_loss$|train/rand/.*/mean'
   tensorboard_videos: True
+  dataset: jax_mmnist
 
   replay:
     size: 5e6
@@ -31,7 +32,7 @@ defaults:
     train_devices: [0]
     sync_every: 1
     profiler: False
-    transfer_guard: True
+    transfer_guard: False
     assert_num_devices: -1
     fetch_policy_carry: False
     nvidia_flags: False
@@ -88,12 +89,14 @@ defaults:
   # Agent
   report: True
   report_gradnorms: False
-  batch_size: 16
-  batch_length: 65
-  batch_length_eval: 33
+  batch_size: 64
+  batch_length: 512
+  num_mnist_patch: 10000
+  batch_length_eval: 1000
+  eval_batch_size: 24
   replay_length: 0
   replay_length_eval: 0
-  replay_context: 1
+  replay_context: 0
   random_agent: False
   loss_scales: {dec_cnn: 1.0, dec_mlp: 1.0, reward: 1.0, cont: 1.0, dyn: 1.0, rep: 0.1, actor: 1.0, critic: 1.0, replay_critic: 0.3}
   opt: {scaler: rms, lr: 4e-5, eps: 1e-20, momentum: True, wd: 0.0, warmup: 1000, globclip: 0.0, agc: 0.3, beta1: 0.9, beta2: 0.999, details: False, pmin: 1e-3, anneal: 0, schedule: constant}
@@ -256,6 +259,17 @@ loconav:
   run:
     train_ratio: 256
     log_keys_max: '^log_.*'
+
+
+mmnist:
+  task: loconav_ant_maze_m
+  env.loconav.repeat: 1
+  dataset: jax_mmnist
+  run:
+    train_ratio: 256
+    log_keys_max: '^log_.*'
+
+
 
 memmaze:
   task: memmaze_11x11

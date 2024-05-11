@@ -3,6 +3,7 @@ import os
 import pathlib
 import sys
 import warnings
+import numpy as np 
 from functools import partial as bind
 
 directory = pathlib.Path(__file__).resolve().parent
@@ -132,7 +133,7 @@ def main(argv=None):
   elif args.script == 'train_hpm':
     embodied.run.train_hpm(
         bind(make_agent, config),
-        bind(make_logger, config), args)
+        bind(make_logger, config), args, config)
 
   else:
     raise NotImplementedError(args.script)
@@ -140,13 +141,15 @@ def main(argv=None):
 
 def make_agent(config):
   from . import agent as agt
-  # env = make_env(config, 0)
   if config.random_agent:
     agent = embodied.RandomAgent(env.obs_space, env.act_space)
   else:
-    agent = agt.Agent(env.obs_space, env.act_space, config)
-  env.close()
+    obs_space = {"image": embodied.Space(np.float32, shape=(64,64,1)),
+                 "is_first": embodied.Space(bool)}
+    act_space = {"action": embodied.Space(np.float32, shape=(2,), low=0, high=1)}
+    agent = agt.Agent(obs_space, act_space, config)
   return agent
+
 
 
 def make_logger(config):

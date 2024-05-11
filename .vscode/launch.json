@@ -31,7 +31,7 @@
             "args": [
                 "--jax.platform", "cpu",
                 "--logdir", "~/logdir/debug_{timestamp}",
-                "--configs", "loconav", "size12m", 
+                "--configs", "loconav", "size12m", "debug",
                 // "--configs", "defaults", "debug",
             ],
             "env": {
