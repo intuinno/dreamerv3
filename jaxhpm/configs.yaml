@@ -89,11 +89,11 @@ defaults:
   # Agent
   report: True
   report_gradnorms: False
-  batch_size: 64
-  batch_length: 512
+  batch_size: 16
+  batch_length: 256
   num_mnist_patch: 10000
-  batch_length_eval: 1000
-  eval_batch_size: 24
+  batch_length_eval: 400
+  eval_batch_size: 2
   replay_length: 0
   replay_length_eval: 0
   replay_context: 0
