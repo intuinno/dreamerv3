@@ -92,7 +92,7 @@ defaults:
   batch_size: 16
   batch_length: 256
   num_mnist_patch: 10000
-  batch_length_eval: 400
+  batch_length_eval: 256
   eval_batch_size: 2
   replay_length: 0
   replay_length_eval: 0
