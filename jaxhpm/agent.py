@@ -1,6 +1,6 @@
 import re
 from functools import partial as bind
-
+import math
 import embodied
 import jax
 import jax.numpy as jnp
@@ -13,6 +13,8 @@ from dreamerv3 import jaxutils
 from dreamerv3 import nets
 from dreamerv3 import ninjax as nj
 
+
+
 f32 = jnp.float32
 treemap = jax.tree_util.tree_map
 sg = lambda x: treemap(jax.lax.stop_gradient, x)
@@ -22,12 +24,56 @@ sample = lambda dist: {
 
 
 @jaxagent.Wrapper
-class Agent(nj.Module):
+class agent(nj.Module):
 
   configs = yaml.YAML(typ='safe').load(
       (embodied.Path(__file__).parent / 'configs.yaml').read())
 
   def __init__(self, obs_space, act_space, config):
+    self.layers = [] 
+    self.bottom_factor = config.tmp_abs_factor ** (config.levels - 1)
+    
+    for level in range(config.levels):
+      if level == 0:
+        isBottom = True
+        lowerLayer = None
+      else:
+        isBottom = False
+        lowerLayer = lowerLayer
+        
+      if level == config.levels - 1:
+        isTop = True
+      else:
+        isTop = False
+        
+      layer = LocalLayer(
+        name=f"{level}",
+        isTop=isTop,
+        isBottom=isBottom, 
+        lower=lowerLayer, 
+        configs=config
+      )
+
+      self.layers.append(layer)
+      
+      if isBottom:
+        self.bottomLayer = layer
+        self.videoFeeder = VideoFeeder()
+        self.bottomLayer.lowerLayer = self.videoFeeder
+      if isTop:
+        self.topLayer = layer
+        
+    self.top_trim = math.floor(config.batch_length / self.bottom_factor)
+
+  def train(self, x):
+    
+    for _ in range(self.top_trim):
+      self.topLayer.singel_run()
+    
+  def pred(self, x):
+    
+    
+        
     self.obs_space = {
         k: v for k, v in obs_space.items() if not k.startswith('log_')}
     self.act_space = {
@@ -71,26 +117,7 @@ class Agent(nj.Module):
     scales.update({k: mlp for k in self.dec.veckeys})
     self.scales = scales
 
-  @property
-  def policy_keys(self):
-    return '/(enc|dyn|actor)/'
 
-  @property
-  def aux_spaces(self):
-    spaces = {}
-    spaces['stepid'] = embodied.Space(np.uint8, 20)
-    if self.config.replay_context:
-      latshape = (self.config.dyn.rssm.stoch, self.config.dyn.rssm.classes)
-      latdtype = jaxutils.COMPUTE_DTYPE
-      latdtype = np.float32 if latdtype == jnp.bfloat16 else latdtype
-      if self.config.dyn.typ == 'rssm':
-        spaces['deter'] = embodied.Space(latdtype, self.config.dyn.rssm.deter)
-      else:
-        for i in range(6):
-          spaces[f'deter{i}'] = embodied.Space(
-              latdtype, self.config.dyn.stack.rnndim)
-      spaces['stoch'] = embodied.Space(np.int32, latshape[:-1])
-    return spaces
 
   def init_train(self, batch_size):
     prevact = {
