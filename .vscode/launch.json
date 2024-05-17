@@ -4,6 +4,7 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
         {
             "name": "Python Debugger: Current File",
             "type": "debugpy",
@@ -23,15 +24,16 @@
             ]
         },
         {
-            "name": "loconav",
+            "name": "mmnist",
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/jaxhpm/main.py",
             "console": "integratedTerminal",
             "args": [
-                "--jax.platform", "cpu",
+                "--jax.jit", "False",
+                // "--jax.platform", "cpu",
                 "--logdir", "~/logdir/debug_{timestamp}",
-                "--configs", "loconav", "size12m", "debug",
+                "--configs", "mmnist", "size12m", 
                 // "--configs", "defaults", "debug",
             ],
             "env": {

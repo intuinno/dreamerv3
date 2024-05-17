@@ -1,0 +1,13 @@
+jax[cuda12]
+tensorflow
+cloudpickle
+msgpack
+zmq
+psutil
+matplotlib
+einops
+tensorflow_datasets
+optax
+ruamel.yaml
+tensorflow_probability
+
