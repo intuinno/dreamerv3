@@ -83,10 +83,10 @@ class JAXAgent(embodied.Agent):
         {k: self.params[k].copy() for k in self.policy_keys},
         self.policy_mirrored)
 
-    self._lower_train()
-    self._lower_report()
-    self._train = self._train.compile()
-    self._report = self._report.compile()
+    # self._lower_train()
+    # self._lower_report()
+    # self._train = self._train.compile()
+    # self._report = self._report.compile()
     self._stack = jax.jit(lambda xs: jax.tree.map(
         jnp.stack, xs, is_leaf=lambda x: isinstance(x, list)))
     self._split = jax.jit(lambda xs: jax.tree.map(
@@ -350,20 +350,31 @@ class JAXAgent(embodied.Agent):
           (m, s, s, s), (m, s), check_rep=False)
 
     ps, pm = self.policy_sharded, self.policy_mirrored
-    self._init_policy = jax.jit(
-        init_policy, (pm, ps), ps, static_argnames=['batch_size'])
-    self._policy = jax.jit(
-        policy, (pm, ps, ps, ps), ps, static_argnames=['mode'])
+    if self.config.jax.jit:
+      self._init_policy = jax.jit(
+          init_policy, (pm, ps), ps, static_argnames=['batch_size'])
+      self._policy = jax.jit(
+          policy, (pm, ps, ps, ps), ps, static_argnames=['mode'])
 
-    ts, tm = self.train_sharded, self.train_mirrored
-    self._init_train = jax.jit(
-        init_train, (tm, ts), ts, static_argnames=['batch_size'])
-    self._train = jax.jit(
-        train, (tm, tm, ts, ts, ts), (tm, ts, ts, tm), donate_argnums=[1])
-    self._init_report = jax.jit(
-        init_report, (tm, ts), ts, static_argnames=['batch_size'])
-    self._report = jax.jit(
-        report, (tm, ts, ts, ts), (tm, ts))
+      ts, tm = self.train_sharded, self.train_mirrored
+      self._init_train = jax.jit(
+          init_train, (tm, ts), ts, static_argnames=['batch_size'])
+
+      self._train = jax.jit(
+          train, (tm, tm, ts, ts, ts), (tm, ts, ts, tm), donate_argnums=[1])
+      self._init_report = jax.jit(
+          init_report, (tm, ts), ts, static_argnames=['batch_size'])
+      self._report = jax.jit(
+          report, (tm, ts, ts, ts), (tm, ts))
+    else:
+      print("Jax Disabled")
+      self._init_policy = init_policy
+      self._policy = policy
+      self._init_train = init_train
+      self._train = train
+      self._init_report = init_report
+      self._report = report
+      
 
   def _take_mets(self, mets):
     mets = jax.tree.map(lambda x: x.__array__(), mets)

@@ -287,7 +287,7 @@ multicpu:
   batch_size: 12
 
 debug:
-  jax: {debug: True, jit: True, prealloc: False, platform: cpu, compute_dtype: bfloat16, profiler: False, checks: False}
+  jax: {debug: True, jit: False, prealloc: False, platform: cpu, compute_dtype: bfloat16, profiler: False, checks: False}
   wrapper: {length: 100, checks: True}
   run: {num_envs: 4, eval_every: 10, log_every: 5, save_every: 15, train_ratio: 8, actor_batch: 2, driver_parallel: False}
   report_gradnorms: False
