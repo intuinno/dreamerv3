@@ -195,6 +195,19 @@ loconav:
   env.loconav.repeat: 1
   run.train_ratio: 256
 
+vertebrate:
+  task: vertebrate_env
+  # debug: False
+  run:
+    envs: 32
+    eval_envs: 16
+    debug: False
+  # run: {envs: 16}
+  jax:
+    policy_devices: [1]
+    train_devices: [1]
+  
+
 multicpu:
   batch_size: 12
   jax.mock_devices: 8

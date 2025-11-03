@@ -17,5 +17,8 @@ echo GPUs:
 nvidia-smi --query-gpu=gpu_name,memory.total,driver_version --format=csv || true
 echo
 
+# Set MuJoCo to use EGL for headless rendering in parallel environments
+export MUJOCO_GL=egl
+
 xvfb-run -a -s '-screen 0 1024x768x24 -ac +extension GLX +render -noreset' "$@"
 # xvfb-run "$@"

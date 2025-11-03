@@ -1,0 +1,37 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python Debugger: Current File with Arguments",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "args": "${command:pickArgs}"
+        },
+        {
+            "name": "train vertebrate",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/dreamerv3/train_vertebrate.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                // "--configs", "top-009-rev0","debug", 
+                "--configs",
+                "vertebrate",
+                "--logdir",
+                "~/logdir/debug/{timestamp}"
+            ],
+            "env": {
+                // "MUJOCO_GL": "glfw",
+                "MUJOCO_GL": "egl",
+                //   "DYLD_LIBRARY_PATH": "/opt/homebrew/lib:",
+                // "XLA_PYTHON_CLIENT_ALLOCATOR": "platform",
+            }
+        }
+    ]
+}
