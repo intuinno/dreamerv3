@@ -17,6 +17,7 @@ import embodied
 import elements
 import gymnasium
 import numpy as np
+import vertebrate_env
 
 U = TypeVar('U')
 V = TypeVar('V')

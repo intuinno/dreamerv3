@@ -13,18 +13,18 @@
             "args": "${command:pickArgs}"
         },
         {
-            "name": "train vertebrate",
+            "name": "train mmjc",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/dreamerv3/train_vertebrate.py",
+            "program": "${workspaceFolder}/dreamerv3/main.py",
             "console": "integratedTerminal",
-            "justMyCode": true,
+            "justMyCode": false,
             "args": [
                 // "--configs", "top-009-rev0","debug", 
                 "--configs",
-                "vertebrate",
+                "mmjc", 
                 "--logdir",
-                "~/logdir/debug/{timestamp}"
+                "./logdir/debug/{timestamp}"
             ],
             "env": {
                 // "MUJOCO_GL": "glfw",

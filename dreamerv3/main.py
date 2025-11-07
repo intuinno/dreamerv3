@@ -217,6 +217,8 @@ def make_env(config, index, **overrides):
   ctor = {
       'dummy': 'embodied.envs.dummy:Dummy',
       'gym': 'embodied.envs.from_gym:FromGym',
+      'gymnasium': 'embodied.envs.from_gymnasium:FromGymnasium',
+      'vertebrate': 'embodied.envs.vertebrate_env:VertebrateEnv',
       'dm': 'embodied.envs.from_dmenv:FromDM',
       'crafter': 'embodied.envs.crafter:Crafter',
       'dmc': 'embodied.envs.dmc:DMC',

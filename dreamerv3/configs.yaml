@@ -207,6 +207,17 @@ vertebrate:
     policy_devices: [1]
     train_devices: [1]
   
+mmjc:
+  task: gymnasium_MMJC-v0
+  run:
+    envs: 32
+    eval_envs: 16
+    debug: True
+  # run: {envs: 16}
+  jax:
+    policy_devices: [1]
+    train_devices: [1]
+  
 
 multicpu:
   batch_size: 12

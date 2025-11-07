@@ -1,4 +1,6 @@
 .pytest_cache
+scope/
+dreamerv3/logs/
 logdir/
 dist
 __pycache__/
