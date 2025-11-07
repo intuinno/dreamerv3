@@ -220,7 +220,33 @@ mmjc:
     policy_devices: [1]
     train_devices: [1]
   
+maz-004-rev2:
+  task: gymnasium_MMJC-v0
+  logdir: logs/maz-004-rev2
+  run:
+    envs: 32
+    eval_envs: 16
+    debug: True
+    # from_checkpoint: '/home/intuinno/codegit/dreamerv3/dreamerv3/logs/maz-004-rev1-no-parallel/ckpt/20251106T085646F294182'
+  # run: {envs: 16}
+  jax:
+    policy_devices: [0]
+    train_devices: [0]
 
+
+maz-004-rev4:
+  task: gymnasium_MMJC-v0
+  logdir: logs/maz-004-rev4
+  run:
+    envs: 16
+    eval_envs: 16
+    debug: True
+    from_checkpoint: '/home/intuinno/codegit/dreamerv3/dreamerv3/logs/maz-004-rev1-no-parallel/ckpt/20251106T085646F294182'
+  # run: {envs: 16}
+  jax:
+    policy_devices: [1]
+    train_devices: [1]
+  
 multicpu:
   batch_size: 12
   jax.mock_devices: 8
