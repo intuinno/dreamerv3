@@ -57,6 +57,7 @@ defaults:
     eval_eps: 1
     report_batches: 1
     from_checkpoint: ''
+    from_checkpoint_regex: Null
     episode_timeout: 180
     actor_addr: 'localhost:{auto}'
     replay_addr: 'localhost:{auto}'
@@ -213,6 +214,7 @@ mmjc:
     envs: 32
     eval_envs: 16
     debug: True
+    from_checkpoint: '/home/intuinno/codegit/dreamerv3/dreamerv3/logs/maz-004-rev1-no-parallel/ckpt/20251106T085646F294182'
   # run: {envs: 16}
   jax:
     policy_devices: [1]

@@ -24,7 +24,9 @@
                 "--configs",
                 "mmjc", 
                 "--logdir",
-                "./logdir/debug/{timestamp}"
+                "./logdir/debug/{timestamp}",
+              //  "--run.from_checkpoint",
+              //  "./dreamerv3/logs/maz-004-rev1",
             ],
             "env": {
                 // "MUJOCO_GL": "glfw",
