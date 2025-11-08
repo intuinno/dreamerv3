@@ -14,7 +14,6 @@ Press Ctrl+C to stop.
 
 import pathlib
 import sys
-import time
 
 # Add the current directory to sys.path
 folder = pathlib.Path(__file__).parent
@@ -70,6 +69,11 @@ def main(argv=None):
     if not config.run.from_checkpoint:
         raise ValueError("Must provide --run.from_checkpoint argument")
 
+    # Add checkpoint path as model_name for environment display
+    checkpoint_path = config.run.from_checkpoint
+    model_name_key = f"env.{suite}.model_name"
+    config = config.update({model_name_key: checkpoint_path})
+
     print(f"Playing checkpoint: {config.run.from_checkpoint}")
     print(f"Task: {config.task}")
     print(f"Using configs: {parsed.configs}")
@@ -92,14 +96,11 @@ def main(argv=None):
     cp.load(config.run.from_checkpoint, keys=["agent"])
     print("Checkpoint loaded successfully!")
 
-    # Get play settings from config
-    render_delay = config.get("render_delay", 0.05)
-
     # Play continuously
-    play(env, agent, render_delay)
+    play(env, agent)
 
 
-def play(env, agent, render_delay):
+def play(env, agent):
     """Main play loop - mimics driver.py logic for single environment.
 
     Key driver.py logic:
@@ -174,14 +175,11 @@ def play(env, agent, render_delay):
         total_reward += reward
         steps += 1
 
-        # Print progress
-        if steps % 10 == 0:
-            print(
-                f"  Step {steps:4d} | Reward: {reward:+7.3f} | Total: {total_reward:+8.3f}"
-            )
-
-        # Frame delay for visualization
-        time.sleep(render_delay)
+        # # Print progress
+        # if steps % 10 == 0:
+        #     print(
+        #         f"  Step {steps:4d} | Reward: {reward:+7.3f} | Total: {total_reward:+8.3f}"
+        #     )
 
 
 def _mask(value, mask):
