@@ -1,4 +1,6 @@
 .pytest_cache
+logs/
+checkpoints/
 scope/
 dreamerv3/logs/
 logdir/

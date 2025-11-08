@@ -34,6 +34,24 @@
                 //   "DYLD_LIBRARY_PATH": "/opt/homebrew/lib:",
                 // "XLA_PYTHON_CLIENT_ALLOCATOR": "platform",
             }
+        },
+        {
+            "name": "play mmjc",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/play.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "args": [
+                "--configs",
+                "maz-004-rev4", 
+                "--run.from_checkpoint",
+                "checkpoints/maz-004-rev4-2M",
+            ],
+            "env": {
+                "MUJOCO_GL": "glfw",
+                // "MUJOCO_GL": "egl",
+            }
         }
     ]
 }
