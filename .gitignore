@@ -1,5 +1,7 @@
 .pytest_cache
 logs/
+.DS_Store
+# requirements.txt
 checkpoints/
 scope/
 dreamerv3/logs/
