@@ -398,6 +398,17 @@ maz-004-rev6:
     policy_devices: [0]
     train_devices: [0]
   
+  
+maz-004-rev7:
+  task: gymnasium_mmjc-explore-only
+  logdir: logs/maz-004-rev7
+  script: parallel
+  # run:
+  #   from_checkpoint: '/home/intuinno/codegit/dreamerv3/checkpoints/maz-004-rev6-6M'
+  jax:
+    policy_devices: [1]
+    train_devices: [1]
+  
 multicpu:
   batch_size: 12
   jax.mock_devices: 8

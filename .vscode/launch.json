@@ -49,6 +49,7 @@
                 "checkpoints/maz-004-rev4-2M",
             ],
             "env": {
+                // "MUJOCO_GL": "glfw",
                 "MUJOCO_GL": "glfw",
                 // "MUJOCO_GL": "egl",
             }
