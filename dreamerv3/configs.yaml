@@ -237,7 +237,7 @@ defaults:
     policy_dist_disc: categorical
     policy_dist_cont: bounded_normal
     imag_last: 0
-    imag_length: 15
+    imag_length: 63
     horizon: 333
     contdisc: True
     imag_loss: { slowtar: False, lam: 0.95, actent: 3e-4, slowreg: 1.0 }
@@ -389,17 +389,14 @@ maz-004-rev4:
     train_devices: [1]
   
 maz-004-rev6:
-  task: gymnasium_MMJC-13x13-v0
+  task: gymnasium_mmjc-explore
   logdir: logs/maz-004-rev6
-  run:
-    envs: 16
-    eval_envs: 16
-    debug: True
-    from_checkpoint: '/home/intuinno/codegit/dreamerv3/checkpoints/maz-004-rev4-7M'
-  # run: {envs: 16}
+  script: parallel
+  # run:
+  #   from_checkpoint: '/home/intuinno/codegit/dreamerv3/checkpoints/maz-004-rev6-6M'
   jax:
-    policy_devices: [1]
-    train_devices: [1]
+    policy_devices: [0]
+    train_devices: [0]
   
 multicpu:
   batch_size: 12
