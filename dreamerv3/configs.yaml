@@ -382,12 +382,12 @@ maz-004-rev4:
     envs: 16
     eval_envs: 16
     debug: True
-    from_checkpoint: '/home/intuinno/codegit/dreamerv3/dreamerv3/logs/maz-004-rev1-no-parallel/ckpt/20251106T085646F294182'
+    from_checkpoint: "/home/intuinno/codegit/dreamerv3/dreamerv3/logs/maz-004-rev1-no-parallel/ckpt/20251106T085646F294182"
   # run: {envs: 16}
   jax:
     policy_devices: [1]
     train_devices: [1]
-  
+
 maz-004-rev6:
   task: gymnasium_mmjc-explore
   logdir: logs/maz-004-rev6
@@ -397,8 +397,7 @@ maz-004-rev6:
   jax:
     policy_devices: [0]
     train_devices: [0]
-  
-  
+
 maz-004-rev7:
   task: gymnasium_mmjc-explore
   logdir: logs/maz-004-rev7
@@ -407,7 +406,8 @@ maz-004-rev7:
   #   from_checkpoint: '/home/intuinno/codegit/dreamerv3/checkpoints/maz-004-rev6-6M'
   jax:
     policy_devices: [1]
-    train_devices: [1]
+    train_devices:
+      [1]
       #  replay:
     #    fracs: { uniform: 0.3, priority: 0.3, recency: 0.4 }
 
@@ -419,11 +419,25 @@ maz-004-rev8:
   #   from_checkpoint: '/home/intuinno/codegit/dreamerv3/checkpoints/maz-004-rev6-6M'
   jax:
     policy_devices: [1]
-    train_devices: [1]
+    train_devices:
+      [1]
       #  replay:
       # fracs: { uniform: 0.3, priority: 0.3, recency: 0.4 }
 
-  
+maz-004-rev9:
+  <<: *size1m
+  task: gymnasium_mmjc-13
+  logdir: logs/maz-004-rev9
+  script: parallel
+  # run:
+  #   from_checkpoint: '/home/intuinno/codegit/dreamerv3/checkpoints/maz-004-rev6-6M'
+  jax:
+    policy_devices: [1]
+    train_devices:
+      [1]
+      #  replay:
+      # fracs: { uniform: 0.3, priority: 0.3, recency: 0.4 }
+
 multicpu:
   batch_size: 12
   jax.mock_devices: 8
